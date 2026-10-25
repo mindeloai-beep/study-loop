@@ -38,10 +38,10 @@ Verify exact behavior, error codes, syntax, defaults, numbers, and anything that
 
 ## Tangents
 
-Sort each side question into one of three kinds, and tell the learner which way it went:
+Sort each side question into one of three kinds, and tell the learner which way it went. The kind sets the answer:
 
-- **Small, and needed to continue:** Answer in two or three lines, return to the step, and save the answer as an idea note linked to that step.
-- **Big, and not needed for today's goal:** Give a one-line answer and add the question to `Next to learn.md`.
+- **Small, the answer fits in three lines:** Answer in three lines or fewer, then return to the step. If the current step needs the answer, save it as an idea note linked to that step. Otherwise, save nothing.
+- **Big, not needed for today's goal:** Answer in one sentence of 30 words or fewer, and add the question to `Next to learn.md`.
 - **A gap that blocks today's goal:** Add it to the plan as a new step.
 
 If the learner says "go deep on this now", override the sort.

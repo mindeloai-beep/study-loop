@@ -41,16 +41,16 @@ When evidence is missing, answer from what you have, name what is missing, and m
 
 Apply these rules in order, and stop at the first one that fits:
 
-1. If the gap is action, not knowledge, there is no session. Name the action. The verdict is `skip`, and WHERE IT GOES names the action.
+1. If the gap is action, not knowledge, there is no session. Name the action. The verdict is `skip`.
 2. If it blocks a current goal, learn the blocking slice now. The verdict is `now`.
 3. If it is used often, or at review level, learn the reading slice soon, as a step inside the topic that needs it. The verdict is `partial`.
 4. Otherwise, park it in "Next to learn" (`park`), or skip it (`skip`).
 
-The verdict is always a slice with a time estimate, never the whole course, video, or book. Size the slice in sessions of 30, 60, or 90 minutes. Put everything outside the slice on the Skip line: setup steps, menus, and shortcuts, and basics the learner already holds or can transfer from a language or tool they know.
+The verdict is always a slice with a time estimate, never the whole course, video, or book. The one exception is an action gap: its verdict names the action instead of a slice. Size the slice in sessions of 30, 60, or 90 minutes. Put everything outside the slice on the Skip line: setup steps, menus, and shortcuts, and basics the learner already holds or can transfer from a language or tool they know.
 
 ## The card
 
-Show the five questions with a one-line answer each, then the card. Print the card exactly in this form, inside a `text` code block:
+Save the verdict first, as the next section says. Then write one final message: the five questions with a one-line answer each, then the card. Print the card exactly in this form, inside a `text` code block:
 
 ```text
 Topic:     NAME (TYPE, LENGTH)

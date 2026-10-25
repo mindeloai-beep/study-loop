@@ -91,11 +91,11 @@ To prove a PostgreSQL claim by running it, follow `references/practice-db.md` in
 
 ### Tangents
 
-Sort each side question as `session-rules.md` says, and name the kind in a few words, such as "Small tangent:" or "Big tangent, saved for later:". Then return to the step and repeat the question that was open. Apply these details:
+Sort and answer each side question by the tangent rules in `session-rules.md`, and name the kind in a few words, such as "Small tangent:" or "Big tangent, saved for later:". Then return to the step and repeat the question that was open. Apply these details:
 
-- **Small:** A question you can answer in three lines is small, even when the goal does not need it. Save the answer as an idea note in the folder of the topic it belongs to, and list it in the session note at the step where it came up.
-- **Big:** Add the row to `Next to learn.md` at once. If the same question is already there, add 1 to Times raised. Otherwise, set Times raised to 1, Added to the session date, Verdict to `not rated`, and Serves to the goal the learner gave for the question, or else the goal of this session.
-- **Blocking:** Add a step to the plan, and show the new plan in one line.
+- **A saved small tangent:** List its idea note in the session note at the step where it came up.
+- **A big tangent:** Add the row to `Next to learn.md` at once. If the same question is already there, add 1 to Times raised. Otherwise, set Times raised to 1, Added to the session date, Verdict to `not rated`, and Serves to the goal the learner gave for the question, or else the goal of this session.
+- **A blocking gap:** Show the new plan in one line.
 
 ## Stage 5: Save
 
@@ -104,3 +104,9 @@ Save when the last step's check passes, when the time runs out, or when the lear
 1. Stop the throwaway container if you started it.
 2. Write the notes as `notes-format.md` says, including its practice timing: an idea note for each taught claim, a known note for each prerequisite the probe showed the learner holds and for each premise a taught claim rests on, and the session note. Search the existing notes for each claim before you create a note.
 3. Tell the learner in two or three lines what you saved, and that the first practice is due tomorrow with the `practice` skill.
+
+If the learner stops in the middle of a step, save these:
+
+- A step whose explanation you gave becomes a taught idea, with `interval_days: 1` and `next_practice` the next day.
+- A step whose check never passed is also listed in the session note as still open.
+- A step you did not reach gets no idea note.

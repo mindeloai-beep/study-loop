@@ -1,6 +1,6 @@
 # Notes format
 
-Read this file before you read or write any note. Every rule here is checked by `tests/check-notes.mjs`.
+Read this file before you read or write any note.
 
 ## Settings
 
