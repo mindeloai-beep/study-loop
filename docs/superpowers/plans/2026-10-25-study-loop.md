@@ -62,7 +62,7 @@ Values:
 - `skills/learn/SKILL.md` frontmatter: `name: learn`; `description: Use when the learner wants to learn or understand a topic, asks what to learn next, or asks whether a course, video, or book is worth their time. Runs a tutoring session that checks the goal, probes, plans, teaches, and saves linked notes.`
 - `skills/practice/SKILL.md` frontmatter: `name: practice`; `description: Use when the learner wants to practice what they have learned, or asks what is due for review. Runs adaptive practice with minimal hints, hands-on PostgreSQL practice in Docker when available, and updates practice dates.`
 - `LICENSE`: MIT, `Copyright (c) 2026 mindeloai-beep`.
-- `.gitignore`: `evals/results/`, `node_modules/`, `.study-loop/`, `tests/runs/`.
+- `.gitignore`: `evals/results/`, `node_modules/`, `.study-loop/`, `tests/runs/`, `.superpowers/` (the build ledger stays local).
 - `.gitattributes`: `* text=auto eol=lf`.
 
 - [ ] **Step 1: Write the failing test** `tests/manifests.test.mjs` with these tests:
