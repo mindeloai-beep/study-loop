@@ -1,7 +1,7 @@
 // Checks a study-loop notes folder against the notes-format contract.
 // Usage: node tests/check-notes.mjs "NOTES_DIR"
 // Only study-loop content is checked: "Next to learn.md" at the root and every file inside a
-// topic folder (a top-level folder holding ideas/, sessions/, or diagrams/). Dot-directories
+// topic folder (a top-level folder with an idea note or a session note). Dot-directories
 // are skipped, so a notes folder can be a whole Obsidian vault.
 import fs from 'node:fs';
 import path from 'node:path';
@@ -10,7 +10,6 @@ import { fileURLToPath } from 'node:url';
 const ILLEGAL = /[\\/:*?"<>|#^[\]]/;
 const HEADER = '| Question | Serves | Times raised | Added | Verdict |';
 const TOPIC_NAME = /^[a-z0-9]+(-[a-z0-9]+)*$/;
-const SUBFOLDERS = ['ideas', 'sessions', 'diagrams'];
 
 function walk(dir) {
   return fs.readdirSync(dir, { withFileTypes: true })
@@ -24,15 +23,15 @@ const unquote = (v) => v.replace(/^(["'])(.*)\1$/, '$2');
 // Returns { fm, body }; fm is null when the note has no frontmatter.
 function parse(text) {
   const lines = text.replace(/^﻿/, '').replace(/\r\n/g, '\n').split('\n');
-  const end = lines[0] === '---' ? lines.indexOf('---', 1) : -1;
+  const end = /^---[ 	]*$/.test(lines[0]) ? lines.findIndex((l, i) => i > 0 && /^---[ 	]*$/.test(l)) : -1;
   if (end < 0) return { fm: null, body: lines.join('\n') };
   const fm = {};
-  let key = null;
+  let key = null; // key whose value is empty on its own line, so "- item" lines belong to it
   for (const line of lines.slice(1, end)) {
     const item = /^\s*-\s+(.*)$/.exec(line);
     const kv = /^([^\s:][^:]*):\s*(.*)$/.exec(line);
-    if (item && key) fm[key] = [...(Array.isArray(fm[key]) ? fm[key] : []), unquote(item[1].trim())];
-    else if (kv) fm[(key = kv[1].trim())] = unquote(kv[2].trim());
+    if (item && key !== null) fm[key] = [...(Array.isArray(fm[key]) ? fm[key] : []), unquote(item[1].trim())];
+    else if (kv) { fm[kv[1].trim()] = unquote(kv[2].trim()); key = kv[2].trim() ? null : kv[1].trim(); }
   }
   return { fm, body: lines.slice(end + 1).join('\n') };
 }
@@ -62,7 +61,11 @@ export function checkNotes(notesDir) {
   const find = (name) => byName.get(name.toLowerCase()) ?? [];
 
   // One scoping step: the topic folders, then the files the rules apply to.
-  const topics = new Set(all.map((f) => rel(f).split('/')).filter((p) => p.length >= 3 && SUBFOLDERS.includes(p[1])).map((p) => p[0]));
+  // A top-level folder is a topic when an ideas/ note has type: idea or a sessions/ note has a session name.
+  const SESSION_NAME = /^d{4}-d{2}-d{2} .+.md$/;
+  const topics = new Set(all.map((f) => rel(f).split('/')).filter((p) => p.length === 3 && (
+    (p[1] === 'ideas' && p[2].endsWith('.md') && parse(fs.readFileSync(path.join(notesDir, ...p), 'utf8')).fm?.type === 'idea') ||
+    (p[1] === 'sessions' && SESSION_NAME.test(p[2])))).map((p) => p[0]));
   const scoped = all.filter((f) => rel(f) === 'Next to learn.md' || topics.has(rel(f).split('/')[0]) && rel(f).includes('/'));
 
   // Rule 7: Next to learn.md with the exact header.

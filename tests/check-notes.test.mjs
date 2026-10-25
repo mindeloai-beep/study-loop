@@ -160,3 +160,18 @@ test('command form: missing folder and missing argument', () => {
   assert.match(none.stderr, /usage/);
   assert.strictEqual(run(valid).status, 0);
 });
+
+test('scope: a folder with ideas/ but no idea notes is not a topic', () => {
+  const out = mutate((r) => write(path.join(r, 'Projects', 'ideas', 'Some note.md'), 'See [[Dangling]].\n'));
+  assert.deepStrictEqual(out, []);
+});
+
+test('frontmatter: list items attach only to a key with an empty value', () => {
+  const out = mutate((r) => edit(path.join(ideas(r), TAUGHT), (t) => t.replace(/(sessions: .*)/, '$1\n  - "[[Missing session]]"')));
+  assert.deepStrictEqual(out, []);
+});
+
+test('frontmatter: trailing whitespace on the --- lines is accepted', () => {
+  const out = mutate((r) => edit(path.join(ideas(r), TAUGHT), (t) => t.replace(/---\n/g, '--- \t\n')));
+  assert.deepStrictEqual(out, []);
+});
