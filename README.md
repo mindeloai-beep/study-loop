@@ -72,7 +72,7 @@ The first time you run either skill, it finds no settings file and asks you two 
 1. Where to keep your notes. This is a folder, for example a `Learning` folder inside an Obsidian vault.
 2. Which project repositories to use as practice material. This answer is optional.
 
-The skill creates the notes folder and a `Next to learn.md` note, then writes your answers to the settings file. A session in Claude Code or Codex then continues as normal.
+The skill creates the notes folder and a `Next to learn.md` note, then writes your answers to the settings file. The skill then carries on with the request you made: `learn` starts its first teaching session, and `practice` starts its first exercise. On later runs, the skill reads the settings file and skips these questions.
 
 ## Where your notes go
 
@@ -97,6 +97,8 @@ NOTES_DIR/
     sessions/SESSION_NAME.md
     diagrams/NAME.svg
 ```
+
+In this layout, the names mean:
 
 - `TOPIC`: a short folder name for each topic, for example `postgres-grants`.
 - `IDEA_TITLE`: the claim itself, shortened to a title. Each idea note holds one claim and links to the claims it rests on.
