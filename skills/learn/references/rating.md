@@ -50,7 +50,7 @@ The verdict is always a slice with a time estimate, never the whole course, vide
 
 ## The card
 
-Save the verdict first, as the next section says. Then write one final message: the five questions with a one-line answer each, then the card. Print the card exactly in this form, inside a `text` code block:
+Save the verdict first, as the next section says. Then write one final message: the five questions with a one-line answer each, then the card. For `now`, the offer to start the learn session follows the card in that message. Print the card exactly in this form, inside a `text` code block:
 
 ```text
 Topic:     NAME (TYPE, LENGTH)
@@ -73,5 +73,5 @@ After the card, invite the learner in one line to correct any answer.
 
 Save without asking, and say where you saved it:
 
-- `now`, `partial`, or `park`: add a row to `Next to learn.md`, or update the row you rated. Set the Verdict cell to the card's Verdict text and the Serves cell to the goal. For `now`, then offer to start the learn session on the slice.
+- `now`, `partial`, or `park`: add a row to `Next to learn.md`, or update the row you rated. Set the Verdict cell to the card's Verdict text and the Serves cell to the goal. For `now`, the offer to start the learn session on the slice closes the final message, after the card.
 - `skip`: save nothing for a new topic. For a row you rated, set its Verdict cell to the skip verdict.
