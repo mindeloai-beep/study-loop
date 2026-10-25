@@ -10,6 +10,7 @@ Use this kit to run a throwaway PostgreSQL database with Supabase-style roles. T
 - The only `-h` in this kit is in the readiness check, which runs inside the container against its own loopback address.
 - Never read `.env` files or any file that holds a connection string.
 - Send files to `psql` on standard input. Never copy files into the container or pass container paths, because Git Bash on Windows rewrites them.
+- Run each command in its own tool call. In Claude Code, use the Bash forms: a `Bash(docker:*)` permission rule allows them, and Claude Code denies the PowerShell forms under that rule.
 
 ## Image
 
@@ -25,14 +26,14 @@ Run these steps in order:
 
 1. Remove any stale container. An error that the container does not exist is fine.
 2. Start the container.
-3. Repeat the readiness check once a second until it exits 0, for at most 30 tries. The check uses the loopback address because the image first runs a temporary server that listens only on a Unix socket.
+3. Repeat the readiness check once a second until it exits 0, for at most 30 tries. The check uses the loopback address because the image first runs a temporary server that listens only on a Unix socket. In Bash, the loop runs inside the container, so the whole check is one `docker` command that exits 0 when the server is ready.
 
 Bash:
 
 ```bash
 docker rm -f study-loop-practice
 docker run -d --rm --name study-loop-practice -e POSTGRES_PASSWORD=practice postgres:17.11-alpine
-for i in $(seq 1 30); do docker exec study-loop-practice pg_isready -h 127.0.0.1 -U postgres && break; sleep 1; done
+docker exec study-loop-practice sh -c 'for i in $(seq 1 30); do pg_isready -h 127.0.0.1 -U postgres && exit 0; sleep 1; done; exit 1'
 ```
 
 PowerShell:
@@ -47,10 +48,14 @@ for ($i = 0; $i -lt 30; $i++) { docker exec study-loop-practice pg_isready -h 12
 
 Load `references/supabase-stub.sql` once per fresh container, then load the lesson files. The stub is not idempotent: a second load fails.
 
+In Bash, read the file first, then send its full text unchanged in a quoted heredoc. Do not redirect the file with `<`, because Claude Code blocks input redirection from a file outside the working directory.
+
 Bash:
 
 ```bash
-docker exec -i study-loop-practice psql -U postgres -v ON_ERROR_STOP=1 -v VERBOSITY=verbose < "FILE"
+docker exec -i study-loop-practice psql -U postgres -v ON_ERROR_STOP=1 -v VERBOSITY=verbose <<'SQL'
+FILE_TEXT
+SQL
 ```
 
 PowerShell (Windows PowerShell 5.1):
@@ -60,7 +65,10 @@ $OutputEncoding = [System.Text.UTF8Encoding]::new($false)
 Get-Content -Raw -Encoding UTF8 "FILE" | docker exec -i study-loop-practice psql -U postgres -v ON_ERROR_STOP=1 -v VERBOSITY=verbose
 ```
 
-Replace `FILE` with the path of the SQL file.
+Replace these placeholders:
+
+- `FILE_TEXT`: the full text of the SQL file.
+- `FILE`: the path of the SQL file.
 
 **Important:** Windows PowerShell 5.1 reads files as ANSI and pipes text as ASCII by default, which turns non-ASCII characters into `?`. Keep the `$OutputEncoding` line and the `-Encoding UTF8` flag.
 

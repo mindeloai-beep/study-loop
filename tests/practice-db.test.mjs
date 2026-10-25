@@ -12,6 +12,10 @@ const read = (...p) => fs.readFileSync(path.join(root, ...p), 'utf8');
 const IMAGE = (read('skills', 'practice', 'references', 'practice-db.md')
   .match(/^postgres:17\.\d+-alpine$/m) || [])[0];
 if (!IMAGE) throw new Error('image tag not found in practice-db.md');
+// The Bash readiness check: one docker command whose loop runs inside the container.
+const READY_LOOP = (read('skills', 'practice', 'references', 'practice-db.md')
+  .match(/^docker exec study-loop-practice sh -c '([^']+)'$/m) || [])[1];
+if (!READY_LOOP) throw new Error('readiness check not found in practice-db.md');
 const USER_A = '00000000-0000-0000-0000-00000000000a';
 const skip = spawnSync('docker', ['info'], { stdio: 'ignore' }).status !== 0
   ? 'docker is not available'
@@ -39,11 +43,8 @@ function start() {
   waitGone();
   const run = docker(['run', '-d', '--rm', '--name', NAME, '-e', 'POSTGRES_PASSWORD=practice', IMAGE]);
   assert.strictEqual(run.status, 0, out(run));
-  for (let i = 0; i < 30; i++) {
-    if (ready()) return;
-    sleep(1000);
-  }
-  assert.fail('pg_isready never succeeded');
+  const wait = docker(['exec', NAME, 'sh', '-c', READY_LOOP]);
+  assert.strictEqual(wait.status, 0, `pg_isready never succeeded: ${out(wait)}`);
 }
 function stop() {
   docker(['stop', NAME]);

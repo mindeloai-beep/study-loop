@@ -47,6 +47,8 @@ claude --plugin-dir "REPO" -p --output-format json --allowedTools "Read Write Ed
 
 **Caution:** `--allowedTools` accepts many values. Without the `--` separator before `MESSAGE`, the flag consumes the message and the run fails with "Input must be provided either through stdin or as a prompt argument". The resume run keeps the same `session_id`.
 
+**Note:** Under this `--allowedTools` string, Claude Code runs a Bash command only when every part of it matches a granted prefix, so a `docker` command chained to `for`, `cat`, or `echo` is denied. It also denies input redirection (`<`) from a file outside `SCRATCH`, and every PowerShell form of the practice kit that was tried. The Bash forms in `practice-db.md`, and a `git show` piped into `docker exec -i`, pass.
+
 ## Codex
 
 Install the plugin from `REPO`:
