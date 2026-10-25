@@ -105,6 +105,7 @@ Replace these placeholders:
 
 - `SESSION_ID`: the session ID from the first run's output header.
 - `OUTPUT_FILE`: a file path for the agent's last message. The `-o` flag (`--output-last-message`) writes only that message to the file.
+- `MESSAGE`: the learner's next message.
 
 In the 15-turn learn session (turns 2 to 15 resumed by session ID), this form kept one session and reported `danger-full-access` on every turn.
 
