@@ -44,16 +44,17 @@ The session ends when every chosen idea has been tested, or when the learner sto
 
 When the learner is stuck or wrong, give the smallest hint that moves them forward:
 
-- Point to where to look, such as one line or one clause, or ask a narrower question. Never state the idea's claim in a hint.
+- Point to where to look, such as one line or one clause, or ask a narrower question. The first hint points at where to look and nothing more.
+- A hint never names the missing statement, the fix, or the idea's claim. A hint never asks a yes/no question whose answer is the fix. A hint never states what a line of the code does to the result, such as which privilege a statement removes or adds. The second hint narrows the place to look or the question, and the learner still works out what the code does.
 - After two hints, give no third hint unasked. Ask whether the learner wants another hint or the answer.
 - Reveal the answer only when the learner asks for it explicitly, for example "show me the answer". "I don't know" is not a request for the answer, so give a hint.
 - After you reveal the answer, explain it in 120 words or fewer.
 
 ## Hands-on
 
-When the chosen ideas include PostgreSQL or SQL, run `docker info` before the first problem.
+When the chosen ideas include PostgreSQL or SQL, run `docker info` before the first problem. If your shell tool takes a timeout, set it to about 15 seconds.
 
-If `docker info` fails, or you cannot run it, say in one message that Docker is unavailable and that the session uses reading questions, and pose the first problem in that same message. Do not try Docker again in this session.
+If `docker info` fails, gives no answer within that limit, or you cannot run it, say in one message that Docker is unavailable and that the session uses reading questions, and pose the first problem in that same message. Do not try Docker again in this session.
 
 Otherwise, run hands-on practice:
 
@@ -61,7 +62,7 @@ Otherwise, run hands-on practice:
 2. Find a past mistake and load it as `references/finding-past-mistakes.md` says.
 3. Pose it as the first problem: show the mistake's text and ask the learner to find the hole. Never show the fix, its commit message, or its file name.
 4. Prove each answer in the container once the learner gives it or asks for it. For a row-level security (RLS) hole, insert a row for each of two users as `postgres`, query as one user with the query form in `practice-db.md`, and show the other user's row. For a missing grant, run the statement as the role and show the `42501` error. Show only the lines that prove the answer.
-5. Run the stop sequence at the end of every session, including one the learner ends early.
+5. Run the Stop section of `references/practice-db.md` at the end of every session, including one the learner ends early.
 
 Prove the answers to the other problems in the container too, when they turn on SQL behavior.
 
@@ -77,7 +78,8 @@ After each problem, apply the practice timing rules in `notes-format.md` to ever
 
 Save when the session ends, including when the learner stops early:
 
-1. Run the stop sequence, if you started the container.
-2. Write the practice session note as `notes-format.md` says, in the topic folder with the most ideas practiced. List each problem with the ideas it tested and its result: clean, hinted, or answer shown. Name the hands-on source by repository folder name and migration file. End the note with a `## Findings` section that lists each live hole from `finding-past-mistakes.md`, with its file and what looks wrong, for the learner to check. Write "None." when there is none.
-3. Add the session note's link to the `sessions` list of each idea practiced.
-4. Tell the learner in two or three lines what was practiced, when each idea is next due, and any findings.
+1. Run the Stop section of `references/practice-db.md`, if you started the container.
+2. If `practice_repos` is set, run the live-hole check in `references/finding-past-mistakes.md` for every session, with or without Docker. The check reads migration files and git history only.
+3. Write the practice session note as `notes-format.md` says, in the topic folder with the most ideas practiced. List each problem with the ideas it tested and its result: clean, hinted, or answer shown. Name the hands-on source by repository folder name and migration file. End the note with a `## Findings` section that lists each live hole from `finding-past-mistakes.md`, with its file and what looks wrong, for the learner to check. Write "None." when there is none.
+4. Add the session note's link to the `sessions` list of each idea practiced.
+5. Tell the learner in two or three lines what was practiced, when each idea is next due, and any findings.

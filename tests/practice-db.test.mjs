@@ -13,9 +13,16 @@ const IMAGE = (read('skills', 'practice', 'references', 'practice-db.md')
   .match(/^postgres:17\.\d+-alpine$/m) || [])[0];
 if (!IMAGE) throw new Error('image tag not found in practice-db.md');
 // The Bash readiness check: one docker command whose loop runs inside the container.
-const READY_LOOP = (read('skills', 'practice', 'references', 'practice-db.md')
-  .match(/^docker exec study-loop-practice sh -c '([^']+)'$/m) || [])[1];
-if (!READY_LOOP) throw new Error('readiness check not found in practice-db.md');
+// Take the whole command line under the Start heading, then drop the outer quotes,
+// so a quote inside the command does not break the extraction.
+const START_SECTION = (read('skills', 'practice', 'references', 'practice-db.md')
+  .split(/^## Start$/m)[1] || '').split(/^## /m)[0];
+const READY_ARG = (START_SECTION
+  .match(/^docker exec study-loop-practice sh -c (.+)$/m) || [])[1];
+const READY_LOOP = READY_ARG && READY_ARG.length > 2 && READY_ARG.startsWith("'") && READY_ARG.endsWith("'")
+  ? READY_ARG.slice(1, -1)
+  : null;
+if (!READY_LOOP) throw new Error('readiness check not found in the Start section of practice-db.md');
 const USER_A = '00000000-0000-0000-0000-00000000000a';
 const skip = spawnSync('docker', ['info'], { stdio: 'ignore' }).status !== 0
   ? 'docker is not available'

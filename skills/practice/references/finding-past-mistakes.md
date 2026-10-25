@@ -32,7 +32,7 @@ Run these steps:
 
 ## Load the mistake
 
-Load the migrations that create the tables the mistake references first, in filename order, then the mistake. Use a fresh container with the stub loaded, and pipe each file from git:
+Load the migrations that create the tables the mistake references first, in filename order, then the mistake. To find those tables, read the mistake's `references`, `alter table`, and `create policy ... on` targets, and load the migrations that create them. The retry rule below is the fallback. Use a fresh container with the stub loaded, and pipe each file from git:
 
 ```bash
 git -C "REPO_PATH" show "COMMIT^:FILE_PATH" | docker exec -i study-loop-practice psql -U postgres -v ON_ERROR_STOP=1 -v VERBOSITY=verbose
@@ -45,7 +45,7 @@ Replace these placeholders:
 
 In PowerShell, print the file with `git -C "REPO_PATH" show "COMMIT^:FILE_PATH"`, then send its text in a here-string, as the PowerShell query form in `practice-db.md` does.
 
-If a load fails on a missing object, find the migration that creates that object, add it to the list in filename order, and load the list again in a fresh container: run the stop sequence, the start sequence, and the stub load. Retry at most 3 times. If the load still fails, plant a change instead.
+If a load fails on a missing object, find the migration that creates that object, add it to the list in filename order, and load the list again in a fresh container: run the Stop section, the Start section, and the stub load from `practice-db.md`. Make at most 3 retries after the first load attempt. If the load still fails, plant a change instead.
 
 ## Plant a change
 
@@ -61,6 +61,6 @@ If no path in `practice_repos` has a migrations folder, write a short migration 
 
 ## Live holes
 
-A live hole is a hole in the current migrations that no later migration fixed. Check each repository once per session with two searches of its migrations folder: one for `create table`, and one for `enable row level security`. A `public` table with no matching `enable row level security` line has RLS turned off. Also note a policy `using (true)` that no later migration replaced.
+A live hole is a hole in the current migrations that no later migration fixed. The Save step in `SKILL.md` runs this check on every session that has `practice_repos` set, with or without Docker. Check each repository once per session with two searches of its migrations folder: one for `create table`, and one for `enable row level security`. A `public` table with no matching `enable row level security` line has RLS turned off. Also note a policy `using (true)` that no later migration replaced.
 
 A live hole goes into the practice session note's `Findings` section, for the learner to check. Never fix it, and never edit the learner's repository.
