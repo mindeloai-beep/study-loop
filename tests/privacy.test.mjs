@@ -17,7 +17,7 @@ export const RULES = [
   ['Windows home path', /\b[A-Za-z]:[\\/]+Users[\\/]+[^\\/\s"'`]+/i],
   // The lookbehind skips a drive-letter /Users path, which the Windows rule already reports.
   // /home stays strict: the Windows rule never matches it.
-  ['macOS or Linux home path', /(?:(?<![A-Za-z]:[\\/]*)\/Users|\/home)\/[^/\s]+\//],
+  ['macOS or Linux home path', /(?:(?<!\b[A-Za-z]:[\\/]*)\/Users|\/home)\/[^/\s]+\//],
   ['key-shaped string', /(?:sk-ant-|sk-proj-|sb_secret_|sb_publishable_|eyJhbGciOi|ghp_|github_pat_)[A-Za-z0-9_-]{20,}|AKIA[A-Z0-9]{16}|sk_live_[A-Za-z0-9_-]{20,}|-----BEGIN(?: [A-Z]+)* PRIVATE KEY-----/],
 ];
 const EMAIL = /[A-Za-z0-9._%+-]+@([A-Za-z0-9-]+(?:\.[A-Za-z0-9-]+)*\.[A-Za-z]{2,})/g;
@@ -77,7 +77,9 @@ test('a drive-letter home path reports once', () => {
   assert.deepEqual(hits('C:\\Users\\x\\a'), ['Windows home path']);
   assert.deepEqual(hits('/home/x/a'), ['macOS or Linux home path']);
   assert.deepEqual(hits('/Users/x/a'), ['macOS or Linux home path']);
-  assert.deepEqual(hits('scp box:/home/alice/x'), ['macOS or Linux home path']);
+  assert.deepEqual(hits('scp box:/Users/alice/x'), ['macOS or Linux home path']);
+  assert.deepEqual(hits('see /Users/alice/x'), ['macOS or Linux home path']);
+  assert.deepEqual(hits('scp box:/home/alice/x'),['macOS or Linux home path']);
   assert.deepEqual(hits('see /home/alice/x'), ['macOS or Linux home path']);
 });
 
