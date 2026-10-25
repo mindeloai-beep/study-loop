@@ -1,0 +1,13 @@
+{
+  "name": "study-loop",
+  "owner": {
+    "name": "mindeloai-beep"
+  },
+  "plugins": [
+    {
+      "name": "study-loop",
+      "source": "./",
+      "description": "A tutor inside Claude Code or Codex: probes what you know, teaches one step at a time, runs spaced practice, and saves what you learn as linked notes."
+    }
+  ]
+}
