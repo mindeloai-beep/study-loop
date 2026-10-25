@@ -101,7 +101,12 @@ Resume a session by its ID instead of `--last`, so another session in the same f
 codex exec resume SESSION_ID --skip-git-repo-check -c sandbox_mode='"danger-full-access"' -o OUTPUT_FILE "MESSAGE" < /dev/null
 ```
 
-This form kept the same session across 15 turns and reported `danger-full-access` on every turn. The `-o` flag (`--output-last-message`) writes only the agent's last message to `OUTPUT_FILE`.
+Replace these placeholders:
+
+- `SESSION_ID`: the session ID from the first run's output header.
+- `OUTPUT_FILE`: a file path for the agent's last message. The `-o` flag (`--output-last-message`) writes only that message to the file.
+
+In the 15-turn learn session (turns 2 to 15 resumed by session ID), this form kept one session and reported `danger-full-access` on every turn.
 
 **Caution:** When `codex exec` runs from a script or from Git Bash without a terminal, it prints "Reading additional input from stdin..." and waits. Append `< /dev/null` to every `codex exec` command, first run and resume, so the run does not hang.
 
@@ -113,7 +118,7 @@ Start a skill with `$study-loop:learn` or `$study-loop:practice` at the start of
 
 The prompt "List the names of every tool you can call, one per line, and mark any that shows the user multiple-choice options." produced a list that includes `request_user_input`, which the agent marked as the multiple-choice tool. The list also names `exec_command`, `apply_patch`, `collaboration.*` agent tools, and many connector tools from the host's configuration.
 
-The Codex documentation and changelog agree with this. The tool is `request_user_input`, added in Codex 0.88.0, with one to three questions and two to three mutually exclusive options each. It was limited to Plan mode, and a feature flag, `default_mode_request_user_input = true` under `[features]` in `config.toml`, makes it available in Default mode. Sources: `https://blog.sandipb.net/2026/08/03/codex-gets-its-askuserquestion` and `https://github.com/openai/codex/pull/12706`.
+The Codex repository agrees with this. The tool is `request_user_input`, and it asks the user one to three questions. The tool was first limited to Plan mode, and a change allows it in Default mode as well, behind the feature `default_mode_request_user_input`. Sources: `https://github.com/openai/codex/pull/12706` for the tool name, the two modes, and the feature, and `https://github.com/openai/codex/pull/9472` for the one-to-three question limit.
 
 In every driven `codex exec` session, the agent showed numbered options in its message and never called `request_user_input`. The session rules already cover this: they say to use a question tool when one is available and to show numbered options otherwise.
 
