@@ -92,3 +92,40 @@ codex exec resume --last --skip-git-repo-check -c sandbox_mode='"danger-full-acc
 **Note:** The `codex exec resume` command has no `--sandbox` flag, which is why the `-c` setting is required. The `--last` option picks the newest recorded session, and `codex exec resume --help` states that `--all` turns off filtering by working folder. This behavior implies that `--last` filters by the current folder. The test runs did not try a second folder to confirm it. The resumed run kept the same session ID as the first run.
 
 Use `danger-full-access` only in `SCRATCH`, because hands-on practice needs the Docker socket.
+
+### Codex session ID and standard input
+
+Resume a session by its ID instead of `--last`, so another session in the same folder cannot be picked. The first run prints `session id: SESSION_ID` in its output header. Run the command from any folder:
+
+```bash
+codex exec resume SESSION_ID --skip-git-repo-check -c sandbox_mode='"danger-full-access"' -o OUTPUT_FILE "MESSAGE" < /dev/null
+```
+
+This form kept the same session across 15 turns and reported `danger-full-access` on every turn. The `-o` flag (`--output-last-message`) writes only the agent's last message to `OUTPUT_FILE`.
+
+**Caution:** When `codex exec` runs from a script or from Git Bash without a terminal, it prints "Reading additional input from stdin..." and waits. Append `< /dev/null` to every `codex exec` command, first run and resume, so the run does not hang.
+
+### Invoke a skill in Codex
+
+Start a skill with `$study-loop:learn` or `$study-loop:practice` at the start of the message, for example `$study-loop:learn postgres grants`. Codex loaded the skill from the plugin cache on every such message. The Claude Code form `/study-loop:learn` is not used in Codex.
+
+### Codex tools and the shell
+
+The prompt "List the names of every tool you can call, one per line, and mark any that shows the user multiple-choice options." produced a list that includes `request_user_input`, which the agent marked as the multiple-choice tool. The list also names `exec_command`, `apply_patch`, `collaboration.*` agent tools, and many connector tools from the host's configuration.
+
+The Codex documentation and changelog agree with this. The tool is `request_user_input`, added in Codex 0.88.0, with one to three questions and two to three mutually exclusive options each. It was limited to Plan mode, and a feature flag, `default_mode_request_user_input = true` under `[features]` in `config.toml`, makes it available in Default mode. Sources: `https://blog.sandipb.net/2026/08/03/codex-gets-its-askuserquestion` and `https://github.com/openai/codex/pull/12706`.
+
+In every driven `codex exec` session, the agent showed numbered options in its message and never called `request_user_input`. The session rules already cover this: they say to use a question tool when one is available and to show numbered options otherwise.
+
+On Windows, Codex ran every command through Windows PowerShell 5.1 (`powershell.exe`). In the practice session, it used the PowerShell forms from `practice-db.md`: the readiness loop, the stub load with `Get-Content`, and a here-string piped to `docker exec -i`. It read file text from an older commit with `git show` and a here-string. Docker worked under `danger-full-access` in both the first run and every resumed run.
+
+### Codex results
+
+Codex 0.163.0, run on 2026-10-25 in fresh scratch folders:
+
+| Session | Result |
+|---|---|
+| First-run setup | The agent asked only for the notes folder, then wrote `settings.json` with an absolute `notes_dir`, and created `Next to learn.md` with the exact header. The setup creates `~/.study-loop/`, so remove it after this session. |
+| Learn session | All nine Task 4 criteria passed with the same persona, including the small tangent (answered, no idea note) and the big tangent (one sentence and a "Next to learn" row). |
+| Practice, due ideas, stuck learner | Problems covered due ideas only. Two hints, then a choice between another hint and the answer, then the answer after "show me the answer". |
+| Practice, hands-on | The agent found the fix commit, loaded the earlier migrations in order, showed another user's row, and reported a live hole as a finding. The container was gone afterwards. |
