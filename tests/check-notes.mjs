@@ -9,6 +9,8 @@ import { fileURLToPath } from 'node:url';
 
 const ILLEGAL = /[\\/:*?"<>|#^[\]]/;
 const HEADER = '| Question | Serves | Times raised | Added | Verdict |';
+// YYYY-MM-DD TOPIC.md, YYYY-MM-DD TOPIC practice.md, and the same-day " 2" forms.
+export const SESSION_NAME = /^\d{4}-\d{2}-\d{2} .+\.md$/;
 const TOPIC_NAME = /^[a-z0-9]+(-[a-z0-9]+)*$/;
 
 function walk(dir) {
@@ -22,8 +24,8 @@ const unquote = (v) => v.replace(/^(["'])(.*)\1$/, '$2');
 // Flat frontmatter only: "key: value" scalars and "key:" followed by "- item" lines.
 // Returns { fm, body }; fm is null when the note has no frontmatter.
 function parse(text) {
-  const lines = text.replace(/^﻿/, '').replace(/\r\n/g, '\n').split('\n');
-  const end = /^---[ 	]*$/.test(lines[0]) ? lines.findIndex((l, i) => i > 0 && /^---[ 	]*$/.test(l)) : -1;
+  const lines = text.replace(/^\uFEFF/, '').replace(/\r\n/g, '\n').split('\n');
+  const end = /^---[ \t]*$/.test(lines[0]) ? lines.findIndex((l, i) => i > 0 && /^---[ \t]*$/.test(l)) : -1;
   if (end < 0) return { fm: null, body: lines.join('\n') };
   const fm = {};
   let key = null; // key whose value is empty on its own line, so "- item" lines belong to it
@@ -62,7 +64,6 @@ export function checkNotes(notesDir) {
 
   // One scoping step: the topic folders, then the files the rules apply to.
   // A top-level folder is a topic when an ideas/ note has type: idea or a sessions/ note has a session name.
-  const SESSION_NAME = /^d{4}-d{2}-d{2} .+.md$/;
   const topics = new Set(all.map((f) => rel(f).split('/')).filter((p) => p.length === 3 && (
     (p[1] === 'ideas' && p[2].endsWith('.md') && parse(fs.readFileSync(path.join(notesDir, ...p), 'utf8')).fm?.type === 'idea') ||
     (p[1] === 'sessions' && SESSION_NAME.test(p[2])))).map((p) => p[0]));

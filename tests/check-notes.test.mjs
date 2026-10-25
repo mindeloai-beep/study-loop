@@ -5,7 +5,7 @@ import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { checkNotes } from './check-notes.mjs';
+import { SESSION_NAME, checkNotes } from './check-notes.mjs';
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 const valid = path.join(here, 'fixtures', 'notes', "My Vault (Test's)", 'Learning');
@@ -96,7 +96,7 @@ test('rule 6 block-list sessions form', () => {
 
 test('frontmatter accepts quoted values and a BOM', () => {
   const out = mutate((r) => {
-    edit(path.join(ideas(r), TAUGHT), (t) => `﻿${t.replace('topic: postgres-grants', 'topic: "postgres-grants"').replace('type: idea', "type: 'idea'")}`);
+    edit(path.join(ideas(r), TAUGHT), (t) => `\uFEFF${t.replace('topic: postgres-grants', 'topic: "postgres-grants"').replace('type: idea', "type: 'idea'")}`);
     edit(path.join(ideas(r), KNOWN), (t) => t.replace('known: true', 'known: "true"'));
   });
   assert.deepStrictEqual(out, []);
@@ -174,4 +174,21 @@ test('frontmatter: list items attach only to a key with an empty value', () => {
 test('frontmatter: trailing whitespace on the --- lines is accepted', () => {
   const out = mutate((r) => edit(path.join(ideas(r), TAUGHT), (t) => t.replace(/---\n/g, '--- \t\n')));
   assert.deepStrictEqual(out, []);
+});
+
+test('session filename pattern', () => {
+  for (const ok of ['2026-10-25 postgres-grants.md', '2026-10-25 postgres-grants practice.md', '2026-10-25 postgres-grants 2.md'])
+    assert.ok(SESSION_NAME.test(ok), ok);
+  for (const bad of ['notes.md', '2026-10-25 postgres-grants.txt', '2026-10-25postgres-grants.md'])
+    assert.ok(!SESSION_NAME.test(bad), bad);
+});
+
+test('scope: a session note makes a folder a topic even when its idea notes are damaged', () => {
+  const out = mutate((r) => {
+    fs.rmSync(path.join(ideas(r), KNOWN));
+    fs.rmSync(path.join(ideas(r), AUTH));
+    edit(path.join(ideas(r), TAUGHT), (t) => t.replace('type: idea', 'type: Idea').replace(/Rests on:.*\n?/, ''));
+    edit(path.join(r, 'postgres-grants', 'sessions', '2026-10-25 postgres-grants.md'), (t) => t.replace(/- \[\[(Privilege|What).*\n/g, ''));
+  });
+  one(out, TAUGHT, /type/);
 });
