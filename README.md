@@ -72,7 +72,7 @@ The first time you run either skill, it finds no settings file and asks you two 
 1. Where to keep your notes. This is a folder, for example a `Learning` folder inside an Obsidian vault.
 2. Which project repositories to use as practice material. This answer is optional.
 
-The skill creates the notes folder and a `Next to learn.md` note, then writes your answers to the settings file. The skill then carries on with the request you made: `learn` starts its first teaching session, and `practice` starts its first exercise. On later runs, the skill reads the settings file and skips these questions.
+The skill creates the notes folder and a `Next to learn.md` note, then writes your answers to the settings file. What happens next depends on the skill. `learn` continues with your request and starts with its first question about your goal. `practice` has nothing to practice until a `learn` session saves ideas, so on a first run it says that no idea is due and stops. On later runs, the skill reads the settings file and skips these questions.
 
 ## Where your notes go
 
