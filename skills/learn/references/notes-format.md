@@ -60,6 +60,7 @@ Rests on: [[IDEA_TITLE]], [[IDEA_TITLE]]
 - `type` is `idea`. `topic` equals the topic folder name.
 - A taught idea has `next_practice` (a real date) and `interval_days` (a positive integer).
 - A known idea has `known: true` and neither practice key.
+- Keep every `type: idea` note in `TOPIC/ideas/`, and give it a `sessions` key.
 - Add `verified: false` only when you could not verify the claim.
 - `CLAIM` is one or two sentences.
 - Add the `Rests on:` line only when the claim has premises. Every link on it points at an existing note.
