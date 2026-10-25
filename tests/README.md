@@ -73,18 +73,20 @@ codex plugin add study-loop@study-loop
 
 The command copies the current files into the cache without a version bump. The `codex plugin marketplace upgrade` command does not work here, because it only refreshes Git marketplaces and returns "is not configured as a Git marketplace" for a local one.
 
-Start a driven session. Run the command from any folder:
+Start a driven session. The `-C` flag sets the working folder for `codex exec`, so you can run the command from any folder:
 
 ```bash
 codex exec --skip-git-repo-check -C "SCRATCH" --sandbox danger-full-access "MESSAGE"
 ```
 
-Continue the most recent session. Run the command with `SCRATCH` as the working directory:
+Continue the most recent session. The `codex exec resume` command has no `-C` flag, so run it from `SCRATCH`. Set the sandbox mode again with `-c`:
 
 ```bash
-codex exec resume --last --skip-git-repo-check "MESSAGE"
+codex exec resume --last --skip-git-repo-check -c sandbox_mode='"danger-full-access"' "MESSAGE"
 ```
 
-**Note:** The `codex exec resume` subcommand has no `-C` flag and no `--sandbox` flag. It finds the last session for the current working directory, so change into `SCRATCH` first. The resumed run answered a question about the first message, which confirms it continues the same session.
+**Important:** A resumed Codex run does not keep the sandbox mode of the first run. Without the `-c` setting, the resumed run reported `read-only` and `docker info` failed with a permission error on the Docker pipe. With the setting, the resumed run reported `danger-full-access` and `docker info --format "{{.ServerVersion}}"` returned the server version. Pass the `-c` setting on every resume.
 
-Use `--sandbox danger-full-access` only in `SCRATCH`, because hands-on practice needs the Docker socket.
+**Note:** The `codex exec resume` command has no `--sandbox` flag, which is why the `-c` setting is required. The `--last` option picks the newest recorded session, and `codex exec resume --help` states that `--all` turns off filtering by working folder. This behavior implies that `--last` filters by the current folder. The test runs did not try a second folder to confirm it. The resumed run kept the same session ID as the first run.
+
+Use `danger-full-access` only in `SCRATCH`, because hands-on practice needs the Docker socket.

@@ -39,7 +39,8 @@ test('every skill has a matching name and a description', () => {
     assert.ok(m, `${d.name} has frontmatter`);
     const field = (k) => (m[1].match(new RegExp(`^${k}:[ \t]*(.*)$`, 'm')) || [])[1];
     assert.strictEqual(field('name'), d.name);
-    assert.ok(field('description')?.trim());
+    assert.strictEqual(typeof field('description'), 'string');
+    assert.ok(field('description').trim().length > 0, `${d.name} description is empty`);
   }
 });
 
