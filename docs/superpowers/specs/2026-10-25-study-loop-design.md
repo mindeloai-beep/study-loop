@@ -191,6 +191,10 @@ The learner can override with "go deep on this now."
 When the learner proposes a new topic, or a course, video, or book, the tool rates it the
 same way.
 
+`learn later: TOPIC, for GOAL` saves a topic from an unrelated session. It adds a `not
+rated` row to "Next to learn", or adds 1 to the row's count, confirms in one line, and
+stops. The next `learn` with no topic rates the row.
+
 First, the tool turns the topic into a goal by asking what the learner would do with it.
 A topic with no goal cannot be rated. Then it answers five questions, each from evidence
 it can read:

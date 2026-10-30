@@ -53,6 +53,8 @@ The two skills take an optional topic. Use the form for your tool:
 
 Replace `[topic]` with the subject, for example `postgres grants`. In Codex, start the message with the `$` form. The `/` form does not work there.
 
+To save a topic for later without leaving your current work, run `/study-loop:learn later: TOPIC, for GOAL`, or `$study-loop:learn later: TOPIC, for GOAL` in Codex. The skill adds the topic to your "Next to learn" note, confirms in one line, and stops. Replace `TOPIC` with the subject and `GOAL` with what it is for.
+
 ## Who pays
 
 Your host tool's login sets the billing. study-loop never handles a login or a key, so it adds no cost of its own:

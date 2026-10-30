@@ -79,7 +79,7 @@ test('a drive-letter home path reports once', () => {
   assert.deepEqual(hits('/Users/x/a'), ['macOS or Linux home path']);
   assert.deepEqual(hits('scp box:/Users/alice/x'), ['macOS or Linux home path']);
   assert.deepEqual(hits('see /Users/alice/x'), ['macOS or Linux home path']);
-  assert.deepEqual(hits('scp box:/home/alice/x'),['macOS or Linux home path']);
+  assert.deepEqual(hits('scp box:/home/alice/x'), ['macOS or Linux home path']);
   assert.deepEqual(hits('see /home/alice/x'), ['macOS or Linux home path']);
 });
 

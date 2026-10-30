@@ -1,6 +1,6 @@
 ---
 name: learn
-description: Use when the learner wants to learn or understand a topic, asks what to learn next, or asks whether a course, video, or book is worth their time. Runs a tutoring session that checks the goal, probes, plans, teaches, and saves linked notes.
+description: Use when the learner wants to learn or understand a topic, save a topic to learn later, asks what to learn next, or asks whether a course, video, or book is worth their time. Runs a tutoring session that checks the goal, probes, plans, teaches, and saves linked notes.
 ---
 
 # Learn
@@ -20,15 +20,25 @@ Run these steps before you reply to the learner:
 
 ## Modes
 
-Choose the mode from the learner's message:
+Choose the mode from the learner's message. Use the first row that matches:
 
 | The message | Mode |
 |---|---|
+| Starts with `later:`, or asks to save a topic for later | Capture it |
 | Names a course, video, or book, or asks whether something is worth learning | Rate it |
 | Names no topic | Rate the top rows of `Next to learn.md` |
 | Names a topic to learn | Run a learn session, stages 1 to 5 |
 
 Both rating modes follow `references/rating.md`.
+
+## Capture it
+
+The learner is busy with other work. Save the topic and end your reply:
+
+1. If the same question is already in `Next to learn.md`, add 1 to Times raised. Otherwise, add a row with the question, Times raised set to 1, Added set to the session date, Verdict set to `not rated`, and Serves set to the goal in the message. Leave Serves empty if the message gives no goal, so that rating asks for it later.
+2. Reply with one line that names the topic and says it is saved to `Next to learn`.
+
+That line is the whole reply. The next `learn` with no topic rates the row.
 
 ## Stage 1: Goal
 
