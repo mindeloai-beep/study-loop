@@ -1,6 +1,6 @@
 {
   "name": "study-loop",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "A tutor inside Claude Code or Codex: probes what you know, teaches one step at a time, runs spaced practice, and saves what you learn as linked notes.",
   "author": {
     "name": "mindeloai-beep"
