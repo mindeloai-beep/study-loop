@@ -42,16 +42,17 @@ That line is the whole reply. The next `learn` with no topic rates the row.
 
 ## Stage 1: Goal
 
-Settle three things, one question per message:
+Settle four things, one question per message:
 
 1. **The goal.** The goal is the concrete outcome the learner wants, such as "read a migration and spot a missing grant". If the message states it, use it. Otherwise, ask what the knowledge is for, and wait.
 2. **Knowledge or action.** Judge whether the goal needs knowing or doing. The gap is action when the outcome comes from practice, outreach, habits, or a decision, or when the learner already knows enough to start. For an action gap, do the following in one message, then stop:
    - Say plainly that the gap is mostly action.
-   - Name one to three concrete actions the learner can take this week.
+   - Name one to three concrete actions the learner can take this week, and any tool or skill an action needs, using the fewest that work.
    - Offer to teach one narrow piece that is knowledge, and name it.
 
    Ask no probe question. If the learner accepts the narrow piece, it becomes the goal.
-3. **Time.** Ask how much time the learner has, unless the message says. Size the session from this table. Use the nearest row at or below the time given, and the 30-minute row for anything shorter:
+3. **Root problem.** The learner may not know enough yet to name what they need. Work out what an expert in this field would call the underlying problem, and the smallest outcome that solves it. If that differs from the stated goal, say so in two lines at most, ask whether to keep their goal or take yours, and wait. If they take yours, it becomes the goal, and you repeat the knowledge-or-action check on it. If it matches, say nothing and continue. Teach nothing here.
+4. **Time.** Ask how much time the learner has, unless the message says. Size the session from this table. Use the nearest row at or below the time given, and the 30-minute row for anything shorter:
 
    | Time | Probe questions, at most | Teach steps, at most |
    |---|---|---|
